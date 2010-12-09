@@ -2,32 +2,28 @@
 /m {8} def
 /s {24} def
 
-/dup_n { % 1 sub index (a b c d 4 -- a b c d a)
-	1 add dup -1 roll dup 3 -1 roll 1 roll
-} def
-
 /chessfield n m mul array def
 
-/chessfield_init {
+/chessfield_init { % Set all chessfield elements to -1
 	0 1 n m mul 1 sub {chessfield exch -1 put} for
 } def
 
-/is_visited {
+/pos_is_visited { % (position -- true/false)
 	chessfield exch get
 	-1 ne
 } def
 
-/is_invalid_pos { % (position -- true/false)
+/pos_is_oor { % (position -- true/false)
 	dup 0 lt
 	exch n m mul ge
 	or
 } def
 
-/drop_invalid_pos { % calculated position, calculated row, compare row -- 
+/drop_invalid_pos { % ( neighbours, calculated position, calculated row, compare row -- neighbours, [calculated position] )
 	eq
-	{dup is_invalid_pos
+	{dup pos_is_oor
 		{pop 1 sub}		% drop if out of range
-		{dup is_visited
+		{dup pos_is_visited
 			{pop 1 sub}	% drop if visited
 			{exch}		% valid
 			ifelse
@@ -42,7 +38,6 @@
 	0	% neighbours = 0
 
 	1 add						% current position, neighbours++
-	%dup 1 add dup_n				% current position, neighbours, current position
 	dup index				% current position, neighbours, current position
 		dup 2 n mul 1 sub sub 		% current position, neighbours, current position, calculated position
 		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
@@ -99,7 +94,6 @@
 		drop_invalid_pos 		% current position, calculated position, neighbours
 
 	1 add						% current position, neighbours++
-	%dup 1 add dup_n				% current position, neighbours, current position
 	dup index				% current position, neighbours, current position
 		dup 2 n mul 1 sub add 		% current position, neighbours, current position, calculated position
 		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
@@ -109,9 +103,7 @@
 	} def
 
 /choose_best_neighbour {
-%/cbn {
-	8 -1 count 2 roll				% neighbours of best neighbour, best neighbour position, (current pos, neighbour positions,) neighbours
-	{
+	8 -1 count 2 roll {				% neighbours of best neighbour, best neighbour position, (current pos, neighbour positions,) neighbours
 		get_neighbours				% neighbours of best neighbour, best neighbour position, (...) neighbours of current neighbour
 		dup count 1 roll {pop} repeat	% current neighbours, neighbours of best neighbour, best neighbour position, (...)
 		%count 1 sub index count 2 sub index
@@ -120,30 +112,27 @@
 			{pop count -1 roll pop exch count 2 roll}	% neighbours of new best neighbour, new best neighbour position, (current pos, remaining neighbour positions)
 			{count 1 roll pop pop}						% neighbours of old best neighbour, old best neighbour position, (current pos, remaining neighbour positions)
 			ifelse
-		} repeat
+	} repeat
 
 	count -1 roll pop			% best neighbour position, current pos
 	count -1 roll				% current pos, best neighbour position
-
-	} def
+} def
 
 /travel {
 	chessfield 2 index 2 index put
-	} def
+} def
 
 /chessfield_print {
 	0 1 n m mul 1 sub {chessfield exch get =} for
-	} def
+} def
 
 /main {
-	chessfield_init s
-	{
+	chessfield_init s {
 		get_neighbours dup 0 eq {exit} if
 		choose_best_neighbour
 		travel
 	} loop
 	pop % Pop zero on top of stack
-
 	pstack % That's the path
 	count n m mul eq {(Eine Loesung wurde gefunden) =} {(Keine Loesung wurde gefunden) =} ifelse
 } def
@@ -151,14 +140,12 @@
 /test {
 	% Test if there exists a solution for all start points
 	0 1 n m mul 1 sub {
-		chessfield_init
-		{
+		chessfield_init {
 			get_neighbours dup 0 eq {exit} if
 			choose_best_neighbour
 			travel
 		} loop
 		pop
-
 		count n m mul ne {(Keine Loesung wurde gefunden fuer:) =} if
 		count 1 sub {pop} repeat =
 	} for
