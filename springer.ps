@@ -1,6 +1,6 @@
 /n {8} def
-/m {n} def
-/s {14} def
+/m {8} def
+/s {24} def
 
 /over {
 	exch dup 3 1 roll
@@ -207,25 +207,33 @@
 	0 1 n m mul 1 sub {chessfield exch get =} for
 	} def
 
-chessfield_init s
+/main {
+	chessfield_init s
 	{
 		get_neighbours dup 0 eq {exit} if
 		choose_best_neighbour
 		travel
 	} loop
-	pop
-	pstack
+	pop % Pop zero on top of stack
 
+	pstack % That's the path
 	count n m mul eq {(Eine Loesung wurde gefunden) =} {(Keine Loesung wurde gefunden) =} ifelse
-%
+} def
 
-%/neighbours {
-%	myarray 16 get 2 add myarray 16 put
-%	} def
+/test {
+	% Test if there exists a solution for all start points
+	0 1 n m mul 1 sub {
+		chessfield_init
+		{
+			get_neighbours dup 0 eq {exit} if
+			choose_best_neighbour
+			travel
+		} loop
+		pop
 
+		count n m mul ne {(Keine Loesung wurde gefunden fuer:) =} if
+		count 1 sub {pop} repeat =
+	} for
+} def
 
-%/rows [n {row} repeat] def
-
-
-%/chessfield [m {[n {0} repeat]} repeat] def
-%/row {m {-1} repeat} def
+test
