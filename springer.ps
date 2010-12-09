@@ -1,0 +1,231 @@
+/n {8} def
+/m {n} def
+/s {14} def
+
+/over {
+	exch dup 3 1 roll
+	} def
+
+/dup_n { % 1 sub index (a b c d 4 -- a b c d a)
+	1 add dup -1 roll dup 3 -1 roll 1 roll
+	} def
+
+/chessfield n m mul array def
+
+/chessfield_init {
+	0 1 n m mul 1 sub {chessfield exch -1 put} for
+	} def
+
+/is_visited {
+		chessfield exch get
+		-1 ne
+	} def
+
+/is_invalid_pos { % (position -- true/false)
+		dup 0 lt
+		exch n m mul ge
+		or
+	} def
+
+/get_neighbours {
+	0	% neighbours = 0
+
+	1 add						% current position, neighbours++
+	%dup 1 add dup_n				% current position, neighbours, current position
+	dup index				% current position, neighbours, current position
+		dup 2 n mul 1 sub sub 		% current position, neighbours, current position, calculated position
+		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
+		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
+		2 n mul sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
+		eq {dup is_invalid_pos
+				{pop 1 sub}
+				{dup is_visited
+					{pop 1 sub}
+					{exch}
+					ifelse
+				}
+				ifelse
+			}
+			{pop 1 sub}
+			ifelse				% current position, calculated position, neighbours
+
+	1 add						% current position, neighbours++
+	dup index				% current position, neighbours, current position
+		dup n 2 sub sub 		% current position, neighbours, current position, calculated position
+		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
+		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
+		n sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
+		eq {dup is_invalid_pos
+				{pop 1 sub}
+				{dup is_visited
+					{pop 1 sub}
+					{exch}
+					ifelse
+				}
+				ifelse
+			}
+			{pop 1 sub}
+			ifelse				% current position, calculated position, neighbours
+
+	1 add						% current position, neighbours++
+	dup index				% current position, neighbours, current position
+		dup n 2 add add 		% current position, neighbours, current position, calculated position
+		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
+		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
+		n add n idiv		% current position, neighbours, calculated position, calculated row, compare row
+		eq {dup is_invalid_pos
+				{pop 1 sub}
+				{dup is_visited
+					{pop 1 sub}
+					{exch}
+					ifelse
+				}
+				ifelse
+			}
+			{pop 1 sub}
+			ifelse				% current position, calculated position, neighbours
+
+	1 add						% current position, neighbours++
+	dup index				% current position, neighbours, current position
+		dup 2 n mul 1 add add 		% current position, neighbours, current position, calculated position
+		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
+		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
+		2 n mul add n idiv		% current position, neighbours, calculated position, calculated row, compare row
+		eq {dup is_invalid_pos
+				{pop 1 sub}
+				{dup is_visited
+					{pop 1 sub}
+					{exch}
+					ifelse
+				}
+				ifelse
+			}
+			{pop 1 sub}
+			ifelse				% current position, calculated position, neighbours
+
+	1 add						% current position, neighbours++
+	dup index				% current position, neighbours, current position
+		dup 2 n mul 1 add sub 		% current position, neighbours, current position, calculated position
+		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
+		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
+		2 n mul sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
+		eq {dup is_invalid_pos
+				{pop 1 sub}
+				{dup is_visited
+					{pop 1 sub}
+					{exch}
+					ifelse
+				}
+				ifelse
+			}
+			{pop 1 sub}
+			ifelse				% current position, calculated position, neighbours
+
+	1 add						% current position, neighbours++
+	dup index				% current position, neighbours, current position
+		dup n 2 add sub 		% current position, neighbours, current position, calculated position
+		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
+		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
+		n sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
+		eq {dup is_invalid_pos
+				{pop 1 sub}
+				{dup is_visited
+					{pop 1 sub}
+					{exch}
+					ifelse
+				}
+				ifelse
+			}
+			{pop 1 sub}
+			ifelse				% current position, calculated position, neighbours
+
+	1 add						% current position, neighbours++
+	dup index				% current position, neighbours, current position
+		dup n 2 sub add 		% current position, neighbours, current position, calculated position
+		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
+		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
+		n add n idiv		% current position, neighbours, calculated position, calculated row, compare row
+		eq {dup is_invalid_pos
+				{pop 1 sub}
+				{dup is_visited
+					{pop 1 sub}
+					{exch}
+					ifelse
+				}
+				ifelse
+			}
+			{pop 1 sub}
+			ifelse				% current position, calculated position, neighbours
+
+	1 add						% current position, neighbours++
+	%dup 1 add dup_n				% current position, neighbours, current position
+	dup index				% current position, neighbours, current position
+		dup 2 n mul 1 sub add 		% current position, neighbours, current position, calculated position
+		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
+		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
+		2 n mul add n idiv		% current position, neighbours, calculated position, calculated row, compare row
+		eq {dup is_invalid_pos
+				{pop 1 sub}
+				{dup is_visited
+					{pop 1 sub}
+					{exch}
+					ifelse
+				}
+				ifelse
+			}
+			{pop 1 sub}
+			ifelse				% current position, calculated position, neighbours
+
+
+
+	} def
+
+/choose_best_neighbour {
+%/cbn {
+	8 -1 count 2 roll				% neighbours of best neighbour, best neighbour position, (current pos, neighbour positions,) neighbours
+	{
+		get_neighbours				% neighbours of best neighbour, best neighbour position, (...) neighbours of current neighbour
+		dup count 1 roll {pop} repeat	% current neighbours, neighbours of best neighbour, best neighbour position, (...)
+		%count 1 sub index count 2 sub index
+		count -2 roll				% best neighbour position, (...) current neighbours, neighbours of best neighbour
+		2 copy lt
+			{pop count -1 roll pop exch count 2 roll}	% neighbours of new best neighbour, new best neighbour position, (current pos, remaining neighbour positions)
+			{count 1 roll pop pop}						% neighbours of old best neighbour, old best neighbour position, (current pos, remaining neighbour positions)
+			ifelse
+		} repeat
+
+	count -1 roll pop			% best neighbour position, current pos
+	count -1 roll				% current pos, best neighbour position
+
+	} def
+
+/travel {
+	chessfield 2 index 2 index put
+	} def
+
+/chessfield_print {
+	0 1 n m mul 1 sub {chessfield exch get =} for
+	} def
+
+chessfield_init s
+	{
+		get_neighbours dup 0 eq {exit} if
+		choose_best_neighbour
+		travel
+	} loop
+	pop
+	pstack
+
+	count n m mul eq {(Eine Loesung wurde gefunden) =} {(Keine Loesung wurde gefunden) =} ifelse
+%
+
+%/neighbours {
+%	myarray 16 get 2 add myarray 16 put
+%	} def
+
+
+%/rows [n {row} repeat] def
+
+
+%/chessfield [m {[n {0} repeat]} repeat] def
+%/row {m {-1} repeat} def
