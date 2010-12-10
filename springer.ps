@@ -36,73 +36,97 @@
 		ifelse
 } def
 
+/get_neighbour_1 {
+	1 add			% current position, neighbours++
+	dup index		% current position, neighbours, current position
+	dup 2 n mul 1 add sub	% current position, neighbours, current position, calculated position
+	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
+	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
+	2 n mul sub n idiv	% current position, neighbours, calculated position, calculated row, compare row
+	drop_invalid_pos	% current position, calculated position, neighbours
+} def
+
+/get_neighbour_2 {
+	1 add			% current position, neighbours++
+	dup index		% current position, neighbours, current position
+	dup 2 n mul 1 sub sub	% current position, neighbours, current position, calculated position
+	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
+	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
+	2 n mul sub n idiv	% current position, neighbours, calculated position, calculated row, compare row
+	drop_invalid_pos	% current position, calculated position, neighbours
+} def
+
+/get_neighbour_3 {
+	1 add			% current position, neighbours++
+	dup index		% current position, neighbours, current position
+	dup n 2 sub sub		% current position, neighbours, current position, calculated position
+	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
+	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
+	n sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
+	drop_invalid_pos	% current position, calculated position, neighbours
+} def
+
+/get_neighbour_4 {
+	1 add			% current position, neighbours++
+	dup index		% current position, neighbours, current position
+	dup n 2 add add		% current position, neighbours, current position, calculated position
+	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
+	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
+	n add n idiv		% current position, neighbours, calculated position, calculated row, compare row
+	drop_invalid_pos	% current position, calculated position, neighbours
+} def
+
+/get_neighbour_5 {
+	1 add			% current position, neighbours++
+	dup index		% current position, neighbours, current position
+	dup 2 n mul 1 add add	% current position, neighbours, current position, calculated position
+	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
+	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
+	2 n mul add n idiv	% current position, neighbours, calculated position, calculated row, compare row
+	drop_invalid_pos	% current position, calculated position, neighbours
+} def
+
+/get_neighbour_6 {
+	1 add			% current position, neighbours++
+	dup index		% current position, neighbours, current position
+	dup 2 n mul 1 sub add	% current position, neighbours, current position, calculated position
+	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
+	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
+	2 n mul add n idiv	% current position, neighbours, calculated position, calculated row, compare row
+	drop_invalid_pos	% current position, calculated position, neighbours
+} def
+
+/get_neighbour_7 {
+	1 add			% current position, neighbours++
+	dup index		% current position, neighbours, current position
+	dup n 2 sub add		% current position, neighbours, current position, calculated position
+	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
+	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
+	n add n idiv		% current position, neighbours, calculated position, calculated row, compare row
+	drop_invalid_pos	% current position, calculated position, neighbours
+} def
+
+/get_neighbour_8 {
+	1 add			% current position, neighbours++
+	dup index		% current position, neighbours, current position
+	dup n 2 add sub		% current position, neighbours, current position, calculated position
+	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
+	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
+	n sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
+	drop_invalid_pos	% current position, calculated position, neighbours
+} def
+
 /get_neighbours {
 	0	% neighbours = 0
-
-	1 add						% current position, neighbours++
-	dup index				% current position, neighbours, current position
-		dup 2 n mul 1 sub sub 		% current position, neighbours, current position, calculated position
-		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
-		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
-		2 n mul sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
-		drop_invalid_pos 		% current position, calculated position, neighbours
-
-	1 add						% current position, neighbours++
-	dup index				% current position, neighbours, current position
-		dup n 2 sub sub 		% current position, neighbours, current position, calculated position
-		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
-		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
-		n sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
-		drop_invalid_pos 		% current position, calculated position, neighbours
-
-	1 add						% current position, neighbours++
-	dup index				% current position, neighbours, current position
-		dup n 2 add add 		% current position, neighbours, current position, calculated position
-		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
-		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
-		n add n idiv		% current position, neighbours, calculated position, calculated row, compare row
-		drop_invalid_pos 		% current position, calculated position, neighbours
-
-	1 add						% current position, neighbours++
-	dup index				% current position, neighbours, current position
-		dup 2 n mul 1 add add 		% current position, neighbours, current position, calculated position
-		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
-		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
-		2 n mul add n idiv		% current position, neighbours, calculated position, calculated row, compare row
-		drop_invalid_pos 		% current position, calculated position, neighbours
-
-	1 add						% current position, neighbours++
-	dup index				% current position, neighbours, current position
-		dup 2 n mul 1 add sub 		% current position, neighbours, current position, calculated position
-		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
-		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
-		2 n mul sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
-		drop_invalid_pos 		% current position, calculated position, neighbours
-
-	1 add						% current position, neighbours++
-	dup index				% current position, neighbours, current position
-		dup n 2 add sub 		% current position, neighbours, current position, calculated position
-		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
-		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
-		n sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
-		drop_invalid_pos 		% current position, calculated position, neighbours
-
-	1 add						% current position, neighbours++
-	dup index				% current position, neighbours, current position
-		dup n 2 sub add 		% current position, neighbours, current position, calculated position
-		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
-		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
-		n add n idiv		% current position, neighbours, calculated position, calculated row, compare row
-		drop_invalid_pos 		% current position, calculated position, neighbours
-
-	1 add						% current position, neighbours++
-	dup index				% current position, neighbours, current position
-		dup 2 n mul 1 sub add 		% current position, neighbours, current position, calculated position
-		dup n idiv				% current position, neighbours, current position, calculated position, calculated row
-		3 -1 roll			 	% current position, neighbours, calculated position, calculated row, current position
-		2 n mul add n idiv		% current position, neighbours, calculated position, calculated row, compare row
-		drop_invalid_pos 		% current position, calculated position, neighbours
-	} def
+	get_neighbour_1
+	get_neighbour_2
+	get_neighbour_3
+	get_neighbour_4
+	get_neighbour_5
+	get_neighbour_6
+	get_neighbour_7
+	get_neighbour_8
+} def
 
 /choose_best_neighbour {
 	8 -1 count 2 roll {				% neighbours of best neighbour, best neighbour position, (current pos, neighbour positions,) neighbours
