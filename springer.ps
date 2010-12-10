@@ -14,8 +14,8 @@
 } def
 
 % Set chessfield position to new neighbour
-/visit { % ( new neighbour -- new neighbour)
-	chessfield 2 index 2 index put
+/visit { % ( position to visit -- )
+	chessfield exch 1 put
 } def
 
 % Check if position is visited
@@ -168,9 +168,9 @@
 
 /main {
 	chessfield_init s {
+		dup visit
 		get_neighbours dup 0 eq {exit} if
 		choose_best_neighbour
-		visit
 	} loop
 	pop % Pop zero on top of stack
 	pstack % That's the path
@@ -182,9 +182,9 @@
 	0 1 n m mul 1 sub {
 		chessfield_init
 		{
+			dup visit
 			get_neighbours dup 0 eq {exit} if
 			choose_best_neighbour
-			visit
 		} loop
 		pop
 		count n m mul ne {(Keine Loesung wurde gefunden fuer:) =} if
