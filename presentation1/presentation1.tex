@@ -8,9 +8,8 @@
 
 \begin{document}
 \title{Stackbased Languages}
-\author{Serap Kadam, Christoph M{\"u}llner \\
-$<$serapkadam@gmail.com$>$, $<$christophm30@gmail.com$>$
-}
+\author[Serap Kadam \and Christoph M{\"u}llner]{Serap Kadam \and Christoph M{\"u}llner \\
+$<$serapkadam@gmail.com$>$, $<$christophm30@gmail.com$>$}
 \subtitle{Knight's Tour}
 
 \date{\today} 
@@ -35,58 +34,47 @@ exactly once.
 In German this problem is called "Springerproblem".
 \end{frame}
 
-\begin{frame}
-\frametitle{Variations of the knight's problem}
-\begin{itemize}
-	\item Find a path for a given start/end position
-	\item Find a closed path for a given position
-	\item Find a path for a board of size $n x m$
-\end{itemize}
-\end{frame}
-
-\subsection{Background}
-\begin{frame}
-\frametitle{The knight and his movement}
-\begin{figure}
-\includegraphics[scale=0.25]{sprung}
-\caption{Possible moves of a knight}
-\end{figure}
-\end{frame}
-
-\subsection{Solutions}
-\begin{frame}
-\frametitle{Backtracking}
-\begin{itemize}
-	\item Choose an unvisited position
-	\item Backtracking if no unvisited position reachable
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Warnsdorff's algorithm}
-\begin{itemize}
-	\item Choose unvisited position, which has the fewest successor positions
-	\item Only a (very good) heuristic => must not find a solution
-	\item Found by H. C. Warnsdorff (1823)
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Other solutions}
-\begin{itemize}
-	\item For bigger boards: D\&C
-\end{itemize}
-\end{frame}
-
 \section{Implementation}
 \subsection{Language, task description}
 \begin{frame}
 \frametitle{Language and task description}
 \begin{itemize}
-	\item Language: PostScript (Ghostscipt)
-	\item Input: End position of knight
+	\item Language: PostScript (Ghostscipt), because of possible drawing
+	\item Input: Start/end position of knight
 	\item Output: Path of knight to end position
+	\item Completeness for $8 x 8$ boards is desirable
+\end{itemize}
+\end{frame}
+
+\subsection{Status and implementation details}
+\begin{frame}
+\frametitle{Algorithm}
+\begin{enumerate}
+	\item Start position on stack
+	\item Put possible neighbours on stack
+	\item Exit if no neighbours are reachable
+	\item Pick best neighbour and drop the others
+	\item Goto 2
+\end{enumerate}
+\end{frame}
+
+\subsection{Open problems}
+\begin{frame}
+\frametitle{Problems, TODOs}
+\begin{itemize}
+	\item Usage of array for visited positions (any ideas?)
+	\item Usage of 'count +1/-1 roll' (is this expensive?)
 	\item Completeness for $8 x 8$ boards
+\end{itemize}
+\end{frame}
+
+\section{Summary}
+\begin{frame}
+\frametitle{Summary}
+\begin{itemize}
+	\item Knight's problem
+	\item Impementation
+	\item Now: demonstration :)
 \end{itemize}
 \end{frame}
 
