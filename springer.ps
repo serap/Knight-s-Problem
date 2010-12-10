@@ -4,23 +4,34 @@
 /m {8} def
 /s {24} def
 
+% TODO: Optimize this out
+% It is only needed to check if a position is already visited.
 /chessfield n m mul array def
 
-/chessfield_init { % Set all chessfield elements to -1
+% Set all chessfield elements to -1 ('unvisited')
+/chessfield_init { % ( -- )
 	0 1 n m mul 1 sub {chessfield exch -1 put} for
 } def
 
+% Set chessfield position to new neighbour
+/visit { % ( new neighbour -- new neighbour)
+	chessfield 2 index 2 index put
+} def
+
+% Check if position is visited
 /pos_is_visited { % (position -- true/false)
 	chessfield exch get
 	-1 ne
 } def
 
+% Check if position is out of range
 /pos_is_oor { % (position -- true/false)
 	dup 0 lt
 	exch n m mul ge
 	or
 } def
 
+% Perform some checks and drop invalid positions
 /drop_invalid_pos { % ( neighbours, calculated position, calculated row, compare row -- neighbours, [calculated position] )
 	eq
 	{dup pos_is_oor
@@ -36,6 +47,7 @@
 		ifelse
 } def
 
+% Put neighbour 1 on stack (if valid)
 /get_neighbour_1 {
 	1 add			% current position, neighbours++
 	dup index		% current position, neighbours, current position
@@ -46,6 +58,7 @@
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
+% Put neighbour 2 on stack (if valid)
 /get_neighbour_2 {
 	1 add			% current position, neighbours++
 	dup index		% current position, neighbours, current position
@@ -56,6 +69,7 @@
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
+% Put neighbour 3 on stack (if valid)
 /get_neighbour_3 {
 	1 add			% current position, neighbours++
 	dup index		% current position, neighbours, current position
@@ -66,6 +80,7 @@
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
+% Put neighbour 4 on stack (if valid)
 /get_neighbour_4 {
 	1 add			% current position, neighbours++
 	dup index		% current position, neighbours, current position
@@ -76,6 +91,7 @@
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
+% Put neighbour 5 on stack (if valid)
 /get_neighbour_5 {
 	1 add			% current position, neighbours++
 	dup index		% current position, neighbours, current position
@@ -86,6 +102,7 @@
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
+% Put neighbour 6 on stack (if valid)
 /get_neighbour_6 {
 	1 add			% current position, neighbours++
 	dup index		% current position, neighbours, current position
@@ -96,6 +113,7 @@
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
+% Put neighbour 7 on stack (if valid)
 /get_neighbour_7 {
 	1 add			% current position, neighbours++
 	dup index		% current position, neighbours, current position
@@ -106,6 +124,7 @@
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
+% Put neighbour 8 on stack (if valid)
 /get_neighbour_8 {
 	1 add			% current position, neighbours++
 	dup index		% current position, neighbours, current position
@@ -116,47 +135,42 @@
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
-/get_neighbours {
-	0	% neighbours = 0
-	get_neighbour_1
+% Puts all possible neighbours and the count of them on the stack
+/get_neighbours { % ( current position -- current positions, neighbours)
+	0 % neighbours = 0
 	get_neighbour_2
 	get_neighbour_3
 	get_neighbour_4
 	get_neighbour_5
-	get_neighbour_6
-	get_neighbour_7
+	get_neighbour_1
 	get_neighbour_8
+	get_neighbour_7
+	get_neighbour_6
 } def
 
-/choose_best_neighbour {
-	8 -1 count 2 roll {				% neighbours of best neighbour, best neighbour position, (current pos, neighbour positions,) neighbours
-		get_neighbours				% neighbours of best neighbour, best neighbour position, (...) neighbours of current neighbour
+% Picks the best neighbour and removes the rest
+% TODO: How bad is using 'count +1/-1 roll'?
+%       i.e. using the stack from both sides...
+/choose_best_neighbour { % ( neighbours -- best neighbour)
+	8 -1 count 2 roll {			% neighbours of best neighbour, best neighbour position, (current pos, neighbour positions,) neighbours
+		get_neighbours			% neighbours of best neighbour, best neighbour position, (...) neighbours of current neighbour
 		dup count 1 roll {pop} repeat	% current neighbours, neighbours of best neighbour, best neighbour position, (...)
-		%count 1 sub index count 2 sub index
-		count -2 roll				% best neighbour position, (...) current neighbours, neighbours of best neighbour
+		count -2 roll			% best neighbour position, (...) current neighbours, neighbours of best neighbour
 		2 copy lt
 			{pop count -1 roll pop exch count 2 roll}	% neighbours of new best neighbour, new best neighbour position, (current pos, remaining neighbour positions)
-			{count 1 roll pop pop}						% neighbours of old best neighbour, old best neighbour position, (current pos, remaining neighbour positions)
+			{count 1 roll pop pop}				% neighbours of old best neighbour, old best neighbour position, (current pos, remaining neighbour positions)
 			ifelse
 	} repeat
 
-	count -1 roll pop			% best neighbour position, current pos
-	count -1 roll				% current pos, best neighbour position
-} def
-
-/travel {
-	chessfield 2 index 2 index put
-} def
-
-/chessfield_print {
-	0 1 n m mul 1 sub {chessfield exch get =} for
+	count -1 roll pop	% best neighbour position, current pos
+	count -1 roll		% current pos, best neighbour position
 } def
 
 /main {
 	chessfield_init s {
 		get_neighbours dup 0 eq {exit} if
 		choose_best_neighbour
-		travel
+		visit
 	} loop
 	pop % Pop zero on top of stack
 	pstack % That's the path
@@ -166,10 +180,11 @@
 /test {
 	% Test if there exists a solution for all start points
 	0 1 n m mul 1 sub {
-		chessfield_init {
+		chessfield_init
+		{
 			get_neighbours dup 0 eq {exit} if
 			choose_best_neighbour
-			travel
+			visit
 		} loop
 		pop
 		count n m mul ne {(Keine Loesung wurde gefunden fuer:) =} if
