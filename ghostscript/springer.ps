@@ -1,8 +1,8 @@
 % Authors: Serap Kadam, Christoph Muellner
 
-/n {30} def
-/m {30} def
-/s {26} def
+/n {8} def
+/m {8} def
+/s {2} def
 
 % TODO: Optimize this out
 % It is only needed to check if a position is already visited.
@@ -60,7 +60,7 @@
 	dup 2 n mul 1 add sub	% current position, neighbours, current position, calculated position
 	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
 	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
-	2 n mul sub n idiv	% current position, neighbours, calculated position, calculated row, compare row
+	n idiv 2 sub		% current position, neighbours, calculated position, calculated row, compare row
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
@@ -71,7 +71,7 @@
 	dup 2 n mul 1 sub sub	% current position, neighbours, current position, calculated position
 	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
 	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
-	2 n mul sub n idiv	% current position, neighbours, calculated position, calculated row, compare row
+	n idiv 2 sub		% current position, neighbours, calculated position, calculated row, compare row
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
@@ -82,7 +82,7 @@
 	dup n 2 sub sub		% current position, neighbours, current position, calculated position
 	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
 	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
-	n sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
+	n idiv 1 sub		% current position, neighbours, calculated position, calculated row, compare row
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
@@ -93,7 +93,7 @@
 	dup n 2 add add		% current position, neighbours, current position, calculated position
 	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
 	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
-	n add n idiv		% current position, neighbours, calculated position, calculated row, compare row
+	n idiv 1 add		% current position, neighbours, calculated position, calculated row, compare row
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
@@ -104,7 +104,7 @@
 	dup 2 n mul 1 add add	% current position, neighbours, current position, calculated position
 	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
 	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
-	2 n mul add n idiv	% current position, neighbours, calculated position, calculated row, compare row
+	n idiv 2 add		% current position, neighbours, calculated position, calculated row, compare row
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
@@ -115,7 +115,7 @@
 	dup 2 n mul 1 sub add	% current position, neighbours, current position, calculated position
 	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
 	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
-	2 n mul add n idiv	% current position, neighbours, calculated position, calculated row, compare row
+	n idiv 2 add		% current position, neighbours, calculated position, calculated row, compare row
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
@@ -126,7 +126,7 @@
 	dup n 2 sub add		% current position, neighbours, current position, calculated position
 	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
 	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
-	n add n idiv		% current position, neighbours, calculated position, calculated row, compare row
+	n idiv 1 add		% current position, neighbours, calculated position, calculated row, compare row
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
@@ -137,7 +137,7 @@
 	dup n 2 add sub		% current position, neighbours, current position, calculated position
 	dup n idiv		% current position, neighbours, current position, calculated position, calculated row
 	3 -1 roll		% current position, neighbours, calculated position, calculated row, current position
-	n sub n idiv		% current position, neighbours, calculated position, calculated row, compare row
+	n idiv 1 sub		% current position, neighbours, calculated position, calculated row, compare row
 	drop_invalid_pos	% current position, calculated position, neighbours
 } def
 
@@ -146,8 +146,8 @@
 %       (so that 8x8 is completly solved)
 /get_neighbours { % ( current position -- current positions, neighbours)
 	0 % neighbours = 0
-	get_neighbour_4
 	get_neighbour_5
+	get_neighbour_4
 	get_neighbour_2
 	get_neighbour_6
 	get_neighbour_8
