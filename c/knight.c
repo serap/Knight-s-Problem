@@ -120,9 +120,8 @@ int choose_best_neighbour(int board[], neighbours_t neighbours)
 	return best_neighbour;
 }
 
-int solve_from_pos(int pos)
+int solve_from_pos(int board[], int pos)
 {
-	int board[BOARD_M * BOARD_N];
 	neighbours_t neighbours;
 
 	init_board(board);
@@ -142,15 +141,16 @@ int solve_from_pos(int pos)
 	return 0;
 }
 
-int main()
+void solve_all()
 {
+	int board[BOARD_M * BOARD_N];
 	int pos;
 	int ret;
 	int good_start_pos;
 
 	good_start_pos = 0;
 	for (pos=0; pos < BOARD_M*BOARD_N; pos++) {
-		ret = solve_from_pos(pos);
+		ret = solve_from_pos(board, pos);
 		if (ret == 0) {
 			printf("A solution for start position %d found.\n", pos);
 			good_start_pos++;
@@ -160,6 +160,29 @@ int main()
 	}
 
 	printf("Found a solution in %d out of %d cases.\n", good_start_pos, BOARD_M*BOARD_N);
+}
 
+void solve_one(int pos)
+{
+	int ret;
+	int board[BOARD_M * BOARD_N];
+
+	ret = solve_from_pos(board, pos);
+	if (ret == 0) {
+		printf("Found a solution for startpoint %d:\n", pos);
+		while (board[pos] != pos) {
+			printf("%d\n", pos);
+			pos = board[pos];
+		}
+		printf("%d\n", pos);
+	} else {
+		printf("Didn't find a solution for startpoint %d.\n", pos);
+	}
+}
+
+int main()
+{
+	solve_all();
+	//solve_one(2);
 	return 0;
 }
