@@ -6,6 +6,10 @@
 #define BOARD_M 8 /* no of lines */
 #define NO_OF_NEIGHBOURS 8
 
+//static const int neighbour_precedence[NO_OF_NEIGHBOURS] = { 4, 5, 2, 6, 8, 3, 1, 7};
+//static const int neighbour_precedence[NO_OF_NEIGHBOURS] = { 1, 2, 3, 4, 5, 6, 7, 8};
+static const int neighbour_precedence[NO_OF_NEIGHBOURS] = { 5, 4, 2, 6, 8, 3, 1, 7};
+
 typedef int neighbours_t[NO_OF_NEIGHBOURS];
 
 void init_board(int board[])
@@ -102,14 +106,15 @@ int get_free_neighbours(int board[], int pos, neighbours_t neighbours)
 
 int choose_best_neighbour(int board[], neighbours_t neighbours)
 {
-	int i;
+	int i, n;
 	int best_neighbour_neighbours = BOARD_N * BOARD_M; //Unreachable high value
 	int best_neighbour = -1;
 
 	for (i=0; i<NO_OF_NEIGHBOURS; i++) {
-		if (neighbours[i] != -1 && get_free_neighbours(board, neighbours[i], NULL) < best_neighbour_neighbours) {
-			best_neighbour = neighbours[i];
-			best_neighbour_neighbours = get_free_neighbours(board, neighbours[i], NULL);
+		n = neighbour_precedence[i] - 1;
+		if (neighbours[n] != -1 && get_free_neighbours(board, neighbours[n], NULL) < best_neighbour_neighbours) {
+			best_neighbour = neighbours[n];
+			best_neighbour_neighbours = get_free_neighbours(board, neighbours[n], NULL);
 		}
 	}
 	return best_neighbour;
