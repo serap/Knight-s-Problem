@@ -1,8 +1,8 @@
 % Authors: Serap Kadam, Christoph Muellner
 
-/n {8} def
-/m {8} def
-/s {24} def
+/n {30} def
+/m {30} def
+/s {26} def
 
 % TODO: Optimize this out
 % It is only needed to check if a position is already visited.
@@ -11,6 +11,10 @@
 % Set all chessfield elements to -1 ('unvisited')
 /chessfield_init { % ( -- )
 	0 1 n m mul 1 sub {chessfield exch -1 put} for
+} def
+
+/chessfield_print { % ( -- )
+	0 1 n m mul 1 sub {chessfield exch get =} for
 } def
 
 % Set chessfield position to new neighbour
@@ -48,6 +52,8 @@
 } def
 
 % Put neighbour 1 on stack (if valid)
+% TODO: Remove 'index'?
+% TODO: Unify get_neighbour_N ?
 /get_neighbour_1 {
 	1 add			% current position, neighbours++
 	dup index		% current position, neighbours, current position
@@ -136,16 +142,18 @@
 } def
 
 % Puts all possible neighbours and the count of them on the stack
+% TODO: Find optimal order of neighbour searching
+%       (so that 8x8 is completly solved)
 /get_neighbours { % ( current position -- current positions, neighbours)
 	0 % neighbours = 0
-	get_neighbour_2
-	get_neighbour_3
 	get_neighbour_4
 	get_neighbour_5
-	get_neighbour_1
-	get_neighbour_8
-	get_neighbour_7
+	get_neighbour_2
 	get_neighbour_6
+	get_neighbour_8
+	get_neighbour_3
+	get_neighbour_1
+	get_neighbour_7
 } def
 
 % Picks the best neighbour and removes the rest
