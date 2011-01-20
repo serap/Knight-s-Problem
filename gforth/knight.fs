@@ -164,6 +164,26 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 	board_completed
 ;
 
+: display_row ( row -- )
+    dup
+    48 + emit ( print line no )
+    n 0 do
+	124 emit ( | )
+	dup board swap m * i + cells + @ .
+    loop
+    124 emit
+    cr
+	drop
+;
+
+: display
+    cr
+    m 0 do
+	i display_row
+	loop
+	cr cr
+;
+
 : solve_all
 	0 ( number of positions where we found a solution )
 	n m * 0 do
@@ -174,6 +194,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 		else
 			." Didn't find a solution for startpoint " . cr
 		endif
+		display
 	loop
 
 	." Found a solution in " . ." out of " n m * . ." cases." cr
@@ -188,28 +209,10 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 	endif
 ;
 
-: display-row ( r -- )
-    { r }
-    48 r + emit ( line no )
-    n 0 do
-	124 emit ( | )
-	board i r m * + cells + @ .
-    loop
-    124 emit
-    cr
-;
-
-: display
-    cr
-    m 0 do
-	i display-row
-	loop
-;
-
 : main
 	solve_all
 	\ 2 solve_one
 ;
 
 main
-\ bye
+bye
