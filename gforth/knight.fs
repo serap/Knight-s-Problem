@@ -63,6 +63,34 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 	endif
 ;
 
+: get_free_neighbours_raw ( pos -- no_of_neighbours )
+	0 \ no_of_neighbours
+
+	over 0 swap -1 -2 get_free_neighbour_raw
+	if 1 + endif
+
+	over 1 swap 1 -2 get_free_neighbour_raw
+	if 1 + endif
+
+	over 2 swap 2 -1 get_free_neighbour_raw
+	if 1 + endif
+
+	over 3 swap 2 1 get_free_neighbour_raw
+	if 1 + endif
+
+	over 4 swap 1 2 get_free_neighbour_raw
+	if 1 + endif
+
+	over 5 swap -1 2 get_free_neighbour_raw
+	if 1 + endif
+
+	over 6 swap -2 1 get_free_neighbour_raw
+	if 1 + endif
+
+	over 7 swap -2 -1 get_free_neighbour_raw
+	if 1 + endif
+;
+
 : get_free_neighbours ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
 
@@ -92,9 +120,23 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 ;
 
 : choose_best_neighbour ( -- best_neighbour )
+	-1 ( best_neighbour = invalid position)
+	n m * ( best_neighbour_neighbours = unreachable high value )
+
 	8 0 do
-	\ XXX
+		neighbour_precedence i cells + @ 1 - ( bn bnn n )
+		neighbours over cells + @ ( bn bnn neighbour )
+		dup -1 <> if
+			dup get_free_neighbours_raw ( bn bnn neighbour #n )
+			dup 3 pick ( bn bnn neighbour #n #n bnn )
+			< if ( bn bnn neighbour #n )
+				2nip ( neighbour #n)
+			else
+				2drop drop ( bn bnn )
+			endif
+		endif
 	loop
+	drop
 ;
 
 : solve_from_pos ( pos -- pos success )
