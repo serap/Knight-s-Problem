@@ -33,35 +33,56 @@ create neighbours 8 cells allot
 	\ XXX
 ;
 
-: get_free_neighbour ( pos i dx dy -- t/f)
-	\ XXX
+: get_free_neighbour_raw ( pos dx dy - neighbour t/f )
+	-rot ( dy pos dx ) 0
+	2 over ( dy pos dx 0 dy pos )
+	swap ( dy pos dy 0 pos dy ) 8
+	* + + + ( dy pos neighbour )
+	dup board_is_valid_pos invert if false exit
+	dup board_get_line 3 pick 3 pick board_get_line + = invert if false exit
+	dup board_is_empty_pos invert if false exit
+	true
+	exit
+;
+
+: get_free_neighbour ( i pos dx dy -- t/f)
+	8 0 do -1 board I cells + ! loop
+	get_free_neighbour_raw ( neighbour t/f )
+	if
+		swap ( neighbour i )
+		neighbours swap ( neighbour neighbours i)
+		cells + !
+		true
+	else
+		drop false
+	endif
 ;
 
 : get_free_neighbours ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
 
-	over 0 -1 -2 get_free_neighbour
+	over 0 swap -1 -2 get_free_neighbour
 	if 1 + endif
 
-	over 1 1 -2 get_free_neighbour
+	over 1 swap 1 -2 get_free_neighbour
 	if 1 + endif
 
-	over 2 2 -1 get_free_neighbour
+	over 2 swap 2 -1 get_free_neighbour
 	if 1 + endif
 
-	over 3 2 1 get_free_neighbour
+	over 3 swap 2 1 get_free_neighbour
 	if 1 + endif
 
-	over 4 1 2 get_free_neighbour
+	over 4 swap 1 2 get_free_neighbour
 	if 1 + endif
 
-	over 5 -1 2 get_free_neighbour
+	over 5 swap -1 2 get_free_neighbour
 	if 1 + endif
 
-	over 6 -2 1 get_free_neighbour
+	over 6 swap -2 1 get_free_neighbour
 	if 1 + endif
 
-	over 7 -2 -1 get_free_neighbour
+	over 7 swap -2 -1 get_free_neighbour
 	if 1 + endif
 ;
 
