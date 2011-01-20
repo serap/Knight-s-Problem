@@ -16,12 +16,12 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 ;
 
 : board_is_empty_pos ( pos -- t/f )
-	board swap cells + @ -1 <>
+	board swap cells + @ -1 =
 ;
 
 : board_completed ( -- t/f )
 	n m * 0 do
-		i board_is_empty_pos invert
+		i board_is_empty_pos
 			if
 				false unloop exit
 			endif
@@ -44,14 +44,13 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 	2over ( dy pos dx 0 dy pos )
 	swap ( dy pos dx 0 pos dy ) 8
 	* + + + ( dy pos neighbour )
-	dup board_is_valid_pos invert if false exit endif
-	dup board_get_line 3 pick 3 pick board_get_line + = invert if false exit endif
-	dup board_is_empty_pos invert if false exit endif
-	true
+	dup board_is_valid_pos invert if nip nip false exit endif
+	dup board_get_line 3 pick 3 pick board_get_line + = invert if nip nip false exit endif
+	dup board_is_empty_pos invert if nip nip false exit endif
+	nip nip true
 ;
 
 : get_free_neighbour ( i pos dx dy -- t/f)
-	8 0 do -1 board I cells + ! loop
 	get_free_neighbour_raw ( neighbour t/f )
 	if
 		swap ( neighbour i )
@@ -59,40 +58,43 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 		cells + !
 		true
 	else
-		drop false
+		2drop false
 	endif
 ;
 
 : get_free_neighbours_raw ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
 
-	over 0 swap -1 -2 get_free_neighbour_raw
+	over -1 -2 get_free_neighbour_raw nip
 	if 1 + endif
 
-	over 1 swap 1 -2 get_free_neighbour_raw
+	over 1 -2 get_free_neighbour_raw nip
 	if 1 + endif
 
-	over 2 swap 2 -1 get_free_neighbour_raw
+	over 2 -1 get_free_neighbour_raw nip
 	if 1 + endif
 
-	over 3 swap 2 1 get_free_neighbour_raw
+	over 2 1 get_free_neighbour_raw nip
 	if 1 + endif
 
-	over 4 swap 1 2 get_free_neighbour_raw
+	over 1 2 get_free_neighbour_raw nip
 	if 1 + endif
 
-	over 5 swap -1 2 get_free_neighbour_raw
+	over -1 2 get_free_neighbour_raw nip
 	if 1 + endif
 
-	over 6 swap -2 1 get_free_neighbour_raw
+	over -2 1 get_free_neighbour_raw nip
 	if 1 + endif
 
-	over 7 swap -2 -1 get_free_neighbour_raw
+	over -2 -1 get_free_neighbour_raw nip
 	if 1 + endif
+
+	nip
 ;
 
 : get_free_neighbours ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
+	8 0 do -1 neighbours i cells + ! loop
 
 	over 0 swap -1 -2 get_free_neighbour
 	if 1 + endif
@@ -117,6 +119,8 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 
 	over 7 swap -2 -1 get_free_neighbour
 	if 1 + endif
+
+	nip
 ;
 
 : choose_best_neighbour ( -- best_neighbour )
@@ -125,15 +129,17 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 
 	8 0 do
 		neighbour_precedence i cells + @ 1 - ( bn bnn n )
-		neighbours over cells + @ ( bn bnn neighbour )
+		neighbours swap cells + @ ( bn bnn neighbour )
 		dup -1 <> if
 			dup get_free_neighbours_raw ( bn bnn neighbour #n )
 			dup 3 pick ( bn bnn neighbour #n #n bnn )
 			< if ( bn bnn neighbour #n )
 				2nip ( neighbour #n)
 			else
-				2drop drop ( bn bnn )
+				2drop ( bn bnn )
 			endif
+		else
+			drop
 		endif
 	loop
 	drop
@@ -142,8 +148,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 : solve_from_pos ( pos -- success )
 	init_board
 
-	1 0 do
-	\ begin
+	n m * 0 do
 		dup						( pos pos )
 		get_free_neighbours 0 = ( pos t/f )
 		if leave endif			( pos )
@@ -152,8 +157,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 		board_move_from_to		( pos best_neighbour )
 		nip 					( best_neighbour )
 	loop
-	\ again
-	
+
 	dup
 	board_move_from_to
 	
@@ -176,7 +180,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 ;
 
 : solve_one ( pos -- )
-	solve_from_pos
+	dup solve_from_pos
 	if
 		cr ." Found a solution for startpoint " . cr
 	else
@@ -186,11 +190,11 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 
 : display-row ( r -- )
     { r }
-    48 r + emit
+    48 r + emit ( line no )
     n 0 do
-	124 emit
-	board i r m * + cells + @ 48 + emit
-	loop
+	124 emit ( | )
+	board i r m * + cells + @ .
+    loop
     124 emit
     cr
 ;
@@ -203,8 +207,8 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 ;
 
 : main
-	\ solve_all
-	2 solve_one
+	solve_all
+	\ 2 solve_one
 ;
 
 main
