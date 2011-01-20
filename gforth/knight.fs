@@ -1,6 +1,5 @@
-: n 8 ;
-: m 8 ;
-: s 24 ;
+8 constant n
+8 constant m
 
 create board n m * cells allot
 create neighbours 8 cells allot
