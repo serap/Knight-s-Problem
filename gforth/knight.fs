@@ -10,11 +10,11 @@ create neighbours 8 cells allot
 ;
 
 : board_move_from_to ( from_pos to_pos -- )
-	\ XXX
+	\ XXX board[from_pos] = to_pos;
+	swap board swap cells + !
 ;
 
 : board_is_empty_pos ( pos -- t/f )
-	\ XXX
 	board swap cells + @ -1 <>
 ;
 
@@ -29,14 +29,13 @@ create neighbours 8 cells allot
 ;
 
 : board_is_valid_pos ( pos -- t/f )
-	\ XXX
-	dup 0 <
-	swap n m + >=
-	or
+	dup 0 >=
+	swap n m * <
+	and
 ;
 
 : board_get_line ( pos -- t/f )
-	\ XXX
+	n /
 ;
 
 : get_free_neighbour ( pos i dx dy -- t/f)
@@ -99,11 +98,7 @@ create neighbours 8 cells allot
     48 r + emit
     n 0 do
 	124 emit
-	board i r m * + cells + @ -1 = if
-	    32 emit
-	else
-	    42 emit
-	endif
+	board i r m * + cells + @ 48 + emit
     loop
     124 emit
     cr
