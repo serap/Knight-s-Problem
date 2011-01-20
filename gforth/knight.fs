@@ -5,6 +5,7 @@
 create board n m * cells allot
 create neighbours 8 cells allot
 create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
+create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 
 : init_board ( -- )
 	n m * 0 do -1 board I cells + ! loop
@@ -40,8 +41,8 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 
 : get_free_neighbour_raw ( pos dx dy - neighbour t/f )
 	-rot ( dy pos dx ) 0
-	2 over ( dy pos dx 0 dy pos )
-	swap ( dy pos dy 0 pos dy ) 8
+	2over ( dy pos dx 0 dy pos )
+	swap ( dy pos dx 0 pos dy ) 8
 	* + + + ( dy pos neighbour )
 	dup board_is_valid_pos invert if false exit endif
 	dup board_get_line 3 pick 3 pick board_get_line + = invert if false exit endif
@@ -140,13 +141,18 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 
 : solve_from_pos ( pos -- success )
 	init_board
-	begin
+
+	1 0 do
+	\ begin
+		dup						( pos pos )
+		get_free_neighbours 0 = ( pos t/f )
+		if leave endif			( pos )
 		choose_best_neighbour	( pos best_neighbour )
 		2dup					( pos best_neighbour pos best_neighbour)
 		board_move_from_to		( pos best_neighbour )
 		nip 					( best_neighbour )
-		get_free_neighbours 0 = if leave endif
-	again
+	loop
+	\ again
 	
 	dup
 	board_move_from_to
@@ -184,7 +190,7 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
     n 0 do
 	124 emit
 	board i r m * + cells + @ 48 + emit
-    loop
+	loop
     124 emit
     cr
 ;
