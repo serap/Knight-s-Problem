@@ -4,6 +4,7 @@
 
 create board n m * cells allot
 create neighbours 8 cells allot
+create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 
 : init_board ( -- )
 	n m * 0 do -1 board I cells + ! loop
@@ -43,11 +44,10 @@ create neighbours 8 cells allot
 	2 over ( dy pos dx 0 dy pos )
 	swap ( dy pos dy 0 pos dy ) 8
 	* + + + ( dy pos neighbour )
-	dup board_is_valid_pos invert if false exit
-	dup board_get_line 3 pick 3 pick board_get_line + = invert if false exit
-	dup board_is_empty_pos invert if false exit
+	dup board_is_valid_pos invert if false exit endif
+	dup board_get_line 3 pick 3 pick board_get_line + = invert if false exit endif
+	dup board_is_empty_pos invert if false exit endif
 	true
-	exit
 ;
 
 : get_free_neighbour ( i pos dx dy -- t/f)
@@ -55,7 +55,7 @@ create neighbours 8 cells allot
 	get_free_neighbour_raw ( neighbour t/f )
 	if
 		swap ( neighbour i )
-		neighbours swap ( neighbour neighbours i)
+		neighbours swap ( neighbour neighbours i )
 		cells + !
 		true
 	else
@@ -92,7 +92,9 @@ create neighbours 8 cells allot
 ;
 
 : choose_best_neighbour ( -- best_neighbour )
+	8 0 do
 	\ XXX
+	loop
 ;
 
 : solve_from_pos ( pos -- pos success )
