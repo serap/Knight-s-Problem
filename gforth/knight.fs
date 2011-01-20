@@ -11,7 +11,6 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 ;
 
 : board_move_from_to ( from_pos to_pos -- )
-	\ XXX board[from_pos] = to_pos;
 	swap board swap cells + !
 ;
 
@@ -20,13 +19,13 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 ;
 
 : board_completed ( -- t/f )
-	1
 	n m * 0 do
-		i board_is_empty_pos *
+		i board_is_empty_pos invert
+			if
+				false unloop exit
+			endif
 	loop
-	dup	0 > if
-		negate
-	endif
+	true
 ;
 
 : board_is_valid_pos ( pos -- t/f )
@@ -97,10 +96,20 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 	loop
 ;
 
-: solve_from_pos ( pos -- pos success )
-	\ XXX
+: solve_from_pos ( pos -- success )
 	init_board
-	false
+	begin
+		choose_best_neighbour	( pos best_neighbour )
+		2dup					( pos best_neighbour pos best_neighbour)
+		board_move_from_to		( pos best_neighbour )
+		nip 					( best_neighbour )
+		get_free_neighbours 0 = if leave endif
+	again
+	
+	dup
+	board_move_from_to
+	
+	board_completed
 ;
 
 : solve_all
@@ -140,4 +149,4 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 ;
 
 main
-bye
+\ bye
