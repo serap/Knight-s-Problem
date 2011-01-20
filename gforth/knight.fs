@@ -3,88 +3,71 @@
 : s 24 ;
 
 create board n m * cells allot
+create neighbours 8 cells allot
 
-: init n m * 0 do -1 board I cells + ! loop ;
-init
+: init_board ( -- )
+	n m * 0 do -1 board I cells + ! loop
+;
 
-: pos_is_visited ( position -- true/false )
-    board swap cells + @ -1 <> ;
+: board_completed ( -- t/f )
+	\ XXX
+;
 
-: pos_is_oor ( position -- true/false )
-    dup 0 <
-    swap n m + >=
-    or ;
+: board_move_from_to ( from_pos to_pos -- )
+	\ XXX
+;
 
+: board_is_empty_pos ( pos -- t/f )
+	\ XXX
+	board swap cells + @ -1 <>
+;
 
+: board_is_valid_pos ( pos -- t/f )
+	\ XXX
+	dup 0 <
+	swap n m + >=
+	or
+;
 
-: foo create board 8 0 do 0 44 POSTPONE emit loop ; immediate
+: board_get_line ( pos -- t/f )
+	\ XXX
+;
 
+: get_free_neighbour ( pos i dx dy -- valid)
+	\ XXX
+;
 
-    
-see foo 
+: get_free_neighbours ( pos -- no_of_neighbours )
+	\ XXX
+;
 
-: display-row ( r -- )
-    { r }
-    48 r + emit
-    n 0 do
-	124 emit
-	board i cells + @ r = if
-	    42 emit
+: choose_best_neighbour ( -- best_neighbour )
+	\ XXX
+;
+
+: solve_from_pos ( pos -- pos success )
+	\ XXX
+	init_board
+	false
+;
+
+: solve_all
+	\ XXX
+;
+
+: solve_one ( pos -- )
+	solve_from_pos
+	true = if
+		cr ." Found a solution for startpoint " . cr
 	else
-	    32 emit
+		cr ." Didn't find a solution for startpoint " . cr
 	endif
-    loop
-    124 emit
-    cr ;
+;
 
-: display
-    cr
-    m 0 do
-	i display-row
-	loop ;
+: main
+	\ solve_all
+	2 solve_one
+;
 
-: mysquare ( n -- n^2 )
-    dup * ;
-
-: myinc ( n -- n )
-    1 + ;
-
-: mycalc ( -- n )
-    6 7 8 * - 9 + ;
-
-: newcalc  3 negate 4 * negate 5 - ;
-
-: mycalc2 7 3 mod ;
-: mycalc3 7 3 / ;
-: mycalc4 7 3 /mod ;
-
-: myfib ( n n -- n n n)
-    over over + ;
-
-: mynewcalc ( n n -- n )
-    over swap - swap 1 + * ;
-
-: mymult ( n n -- n)
-    * ;
-
-: mysquared ( n -- n^2 )
-    dup * ;
-
-: mycubed ( n -- n^3 )
-    dup mysquared * ;
-
-: myforth-power ( n -- n^4 )
-    mysquared mysquared ;
-
-: mynip ( x y z -- x z )
-    swap drop ;
-
-: mytuck ( x y z -- x z y z )
-    swap over ;
-
-: mynegate ( x -- -x )
-    -1 * ;
-
-: my/mod ( x y -- x y mod x y /)
-    2dup mod rot rot / ;
-
+main
+bye
