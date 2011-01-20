@@ -39,12 +39,36 @@ create neighbours 8 cells allot
 	\ XXX
 ;
 
-: get_free_neighbour ( pos i dx dy -- valid)
+: get_free_neighbour ( pos i dx dy -- t/f)
 	\ XXX
 ;
 
 : get_free_neighbours ( pos -- no_of_neighbours )
-	\ XXX
+	0 \ no_of_neighbours
+
+	over 0 -1 -2 get_free_neighbour
+	if 1 + endif
+
+	over 1 1 -2 get_free_neighbour
+	if 1 + endif
+
+	over 2 2 -1 get_free_neighbour
+	if 1 + endif
+
+	over 3 2 1 get_free_neighbour
+	if 1 + endif
+
+	over 4 1 2 get_free_neighbour
+	if 1 + endif
+
+	over 5 -1 2 get_free_neighbour
+	if 1 + endif
+
+	over 6 -2 1 get_free_neighbour
+	if 1 + endif
+
+	over 7 -2 -1 get_free_neighbour
+	if 1 + endif
 ;
 
 : choose_best_neighbour ( -- best_neighbour )
@@ -63,7 +87,7 @@ create neighbours 8 cells allot
 
 : solve_one ( pos -- )
 	solve_from_pos
-	true = if
+	if
 		cr ." Found a solution for startpoint " . cr
 	else
 		cr ." Didn't find a solution for startpoint " . cr
