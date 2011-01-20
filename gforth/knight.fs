@@ -9,10 +9,6 @@ create neighbours 8 cells allot
 	n m * 0 do -1 board I cells + ! loop
 ;
 
-: board_completed ( -- t/f )
-	\ XXX
-;
-
 : board_move_from_to ( from_pos to_pos -- )
 	\ XXX
 ;
@@ -20,6 +16,16 @@ create neighbours 8 cells allot
 : board_is_empty_pos ( pos -- t/f )
 	\ XXX
 	board swap cells + @ -1 <>
+;
+
+: board_completed ( -- t/f )
+	1
+	n m * 0 do
+		i board_is_empty_pos *
+	loop
+	dup	0 > if
+		negate
+	endif
 ;
 
 : board_is_valid_pos ( pos -- t/f )
@@ -62,6 +68,28 @@ create neighbours 8 cells allot
 	else
 		cr ." Didn't find a solution for startpoint " . cr
 	endif
+;
+
+: display-row ( r -- )
+    { r }
+    48 r + emit
+    n 0 do
+	124 emit
+	board i r m * + cells + @ -1 = if
+	    32 emit
+	else
+	    42 emit
+	endif
+    loop
+    124 emit
+    cr
+;
+
+: display
+    cr
+    m 0 do
+	i display-row
+	loop
 ;
 
 : main
