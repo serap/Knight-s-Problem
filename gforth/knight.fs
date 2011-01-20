@@ -11,7 +11,7 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 ;
 
 : board_move_from_to ( from_pos to_pos -- )
-	\ XXX board[from_pos] = to_pos;
+	\ board[from_pos] = to_pos;
 	swap board swap cells + !
 ;
 
@@ -146,7 +146,18 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 ;
 
 : solve_all
-	\ XXX
+	0 ( number of positions where we found a solution )
+	n m * 0 do
+		dup i solve_from_pos
+		if
+			." Found a solution for startpoint " . cr
+			1 +
+		else
+			." Didn't find a solution for startpoint " . cr
+		endif
+	loop
+
+	." Found a solution in " . ." out of " n m * . ." cases." cr
 ;
 
 : solve_one ( pos -- )
