@@ -107,31 +107,13 @@ But: there are 13.267.364.410.532 undirected closed path solutions for a $8x8$ b
 
 \end{frame}
 
-\begin{frame}
-\frametitle{Extended solution}
-\begin{itemize}
-	\item For bigger boards: Divide \& Conquer
-	\item $\forall n \geq 18, n, x, y, z \in \mathbb N, n = x*6 + y*7 + z * 8$
-\end{itemize}
-
-\begin{figure}
-\includegraphics[scale=0.35]{spripic1}
-\caption{Divide big board in smaller fields of size 6x6, 6x7, 6x8, 7x7, 7x8, 8x8
-	and solve each field with a given start and end position, so that every subboard
-	can be reached}
-\end{figure}
-\end{frame}
-
-
 \section{Implementation}
 \subsection{Language, task description}
 \begin{frame}
-\frametitle{Language and task description}
+\frametitle{Language}
 \begin{itemize}
-	\item Language: PostScript (Ghostscipt), because of possible drawing
-	\item Input: Start/end position of knight
-	\item Output: Path of knight to end position
-	\item Completeness for $8 x 8$ boards is desirable
+	\item Language: Forth (gforth)
+	\item Used special language feature: Data & return stack
 \end{itemize}
 \end{frame}
 
@@ -145,17 +127,6 @@ But: there are 13.267.364.410.532 undirected closed path solutions for a $8x8$ b
 	\item Pick best neighbour and drop the others
 	\item Goto 2
 \end{enumerate}
-\end{frame}
-
-\subsection{Open problems}
-\begin{frame}
-\frametitle{Problems, TODOs}
-\begin{itemize}
-	\item Usage of array for visited positions (any ideas?)
-	\item Remove 'index' (not beautiful!)
-	\item Usage of 'count +1/-1 roll' (is this expensive?)
-	\item Completeness for $8 x 8$ boards (mathematical problem)
-\end{itemize}
 \end{frame}
 
 \section{Summary}
