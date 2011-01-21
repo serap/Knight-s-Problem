@@ -54,7 +54,7 @@ create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 : board_get_line ( pos -- t/f )
 	n / ;
 
-: calc_neighbour_pos ( neighbour_id -- dx dy )
+: get_neighbour_distances ( neighbour_id -- dx dy )
 	dup
 	possible_neighbours_dx swap cells + @
 	swap
@@ -74,7 +74,7 @@ create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 	0 \ no_of_neighbours
 
 	8 0 do
-		over i calc_neighbour_pos get_free_neighbour nip
+		over i get_neighbour_distances get_free_neighbour nip
 		if 1 + endif
 	loop
 	nip ;
@@ -84,7 +84,7 @@ create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 	8 0 do -1 neighbours i cells + ! loop
 
 	8 0 do
-		over i calc_neighbour_pos get_free_neighbour
+		over i get_neighbour_distances get_free_neighbour
 		if
 			neighbours i cells + !
 			1 +
