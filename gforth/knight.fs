@@ -7,16 +7,13 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 
 : init_board ( -- )
-	n m * 0 do -1 board I cells + ! loop
-;
+	n m * 0 do -1 board I cells + ! loop ;
 
 : board_move_from_to ( from_pos to_pos -- )
- 	swap board swap cells + !
-;
+ 	swap board swap cells + ! ;
 
 : board_is_empty_pos ( pos -- t/f )
-	board swap cells + @ -1 =
-;
+	board swap cells + @ -1 = ;
 
 : board_completed ( -- t/f )
 	n m * 0 do
@@ -25,18 +22,16 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 				false unloop exit
 			endif
 	loop
-	true
-;
+	true ;
 
 : board_is_valid_pos ( pos -- t/f )
 	dup 0 >=
 	swap n m * <
-	and
+	and ;
 ;
 
 : board_get_line ( pos -- t/f )
-	n /
-;
+	n / ;
 
 : 3pick ( n0 n1 n2 n3 -- n0 n1 n2 n3 n0 )
 	>r >r >r dup r> swap r> swap r> swap ;
@@ -49,8 +44,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 	dup board_is_valid_pos invert if nip nip false exit endif
 	dup board_get_line 3pick 3pick board_get_line + = invert if nip nip false exit endif
 	dup board_is_empty_pos invert if nip nip false exit endif
-	nip nip true
-;
+	nip nip true ;
 
 : get_free_neighbour ( i pos dx dy -- t/f)
 	get_free_neighbour_raw ( neighbour t/f )
@@ -61,8 +55,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 		true
 	else
 		2drop false
-	endif
-;
+	endif ;
 
 : get_free_neighbours_raw ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
@@ -91,8 +84,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 	over -2 -1 get_free_neighbour_raw nip
 	if 1 + endif
 
-	nip
-;
+	nip ;
 
 : get_free_neighbours ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
@@ -122,8 +114,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 	over 7 swap -2 -1 get_free_neighbour
 	if 1 + endif
 
-	nip
-;
+	nip ;
 
 : choose_best_neighbour ( -- best_neighbour )
 	-1 ( best_neighbour = invalid position)
@@ -144,8 +135,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 			drop
 		endif
 	loop
-	drop
-;
+	drop ;
 
 : solve_from_pos ( pos -- success )
 	init_board
@@ -163,8 +153,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 	dup
 	board_move_from_to
 	
-	board_completed
-;
+	board_completed ;
 
 : display_row ( row -- )
     dup
@@ -175,16 +164,14 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
     loop
     124 emit
     cr
-	drop
-;
+	drop ;
 
 : display
     cr
     m 0 do
 	i display_row
 	loop
-	cr cr
-;
+	cr cr ;
 
 : solve_all
 	0 ( number of positions where we found a solution )
@@ -199,8 +186,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 		display
 	loop
 
-	." Found a solution in " . ." out of " n m * . ." cases." cr
-;
+	." Found a solution in " . ." out of " n m * . ." cases." cr ;
 
 : solve_one ( pos -- )
 	dup solve_from_pos
@@ -208,13 +194,11 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 		cr ." Found a solution for startpoint " . cr
 	else
 		cr ." Didn't find a solution for startpoint " . cr
-	endif
-;
+	endif ;
 
 : main
 	solve_all
-	\ 2 solve_one
-;
+	\ 2 solve_one ;
 
 main
 bye
