@@ -162,9 +162,6 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 
 	nip ;
 
-: 3pick ( n0 n1 n2 n3 -- n0 n1 n2 n3 n0 )
-	>r >r >r dup r> swap r> swap r> swap ;
-
 : choose_best_neighbour ( -- best_neighbour )
 	-1 ( best_neighbour = invalid position)
 	n m * ( best_neighbour_neighbours = unreachable high value )
@@ -173,12 +170,13 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 		neighbour_precedence i cells + @ 1 - ( bn bnn n )
 		neighbours swap cells + @ ( bn bnn neighbour )
 		dup -1 <> if
-			dup get_free_neighbours_raw ( bn bnn neighbour #n )
-			dup 3pick ( bn bnn neighbour #n #n bnn )
-			< if ( bn bnn neighbour #n )
-				2nip ( neighbour #n)
+			-rot 2>r ( neighbour | bn bnn )
+			dup get_free_neighbours_raw ( neighbour #n | bn bnn )
+			dup r@ ( neighbour #n bnn | bn bnn )
+			< if ( neighbour #n | bn bnn)
+				2rdrop ( neighbour #n)
 			else
-				2drop ( bn bnn )
+				2drop 2r> ( bn bnn )
 			endif
 		else
 			drop
