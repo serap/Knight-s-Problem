@@ -21,10 +21,11 @@
 
 8 constant n
 8 constant m
+8 constant number_of_neighbours
 create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 
 create board n m * cells allot
-create neighbours 8 cells allot
+create neighbours number_of_neighbours cells allot
 create possible_neighbours_dx -1 , 1 , 2 , 2 , 1 , -1 , -2 , -2 ,
 create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 
@@ -73,7 +74,7 @@ create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 : get_free_neighbours_raw ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
 
-	8 0 do
+	number_of_neighbours 0 do
 		over i get_neighbour_distances get_free_neighbour nip
 		if 1 + endif
 	loop
@@ -81,9 +82,9 @@ create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 
 : get_free_neighbours ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
-	8 0 do -1 neighbours i cells + ! loop
+	number_of_neighbours 0 do -1 neighbours i cells + ! loop
 
-	8 0 do
+	number_of_neighbours 0 do
 		over i get_neighbour_distances get_free_neighbour
 		if
 			neighbours i cells + !
@@ -98,7 +99,7 @@ create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 	-1 ( best_neighbour = invalid position)
 	n m * ( best_neighbour_neighbours = unreachable high value )
 
-	8 0 do
+	number_of_neighbours 0 do
 		neighbour_precedence i cells + @ 1 - ( bn bnn n )
 		neighbours swap cells + @ ( bn bnn neighbour )
 		dup -1 <> if
