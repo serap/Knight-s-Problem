@@ -35,7 +35,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 : 3pick ( n0 n1 n2 n3 -- n0 n1 n2 n3 n0 )
 	>r >r >r dup r> swap r> swap r> swap ;
 
-: get_free_neighbour_raw ( pos dx dy - neighbour t/f )
+: get_free_neighbour ( pos dx dy - neighbour t/f )
 	-rot ( dy pos dx ) 0
 	2over ( dy pos dx 0 dy pos )
 	swap ( dy pos dx 0 pos dy ) 8
@@ -45,42 +45,31 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 	dup board_is_empty_pos invert if nip nip false exit endif
 	nip nip true ;
 
-: get_free_neighbour ( i pos dx dy -- t/f)
-	get_free_neighbour_raw ( neighbour t/f )
-	if
-		swap ( neighbour i )
-		neighbours swap ( neighbour neighbours i )
-		cells + !
-		true
-	else
-		2drop false
-	endif ;
-
 : get_free_neighbours_raw ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
 
-	over -1 -2 get_free_neighbour_raw nip
+	over -1 -2 get_free_neighbour nip
 	if 1 + endif
 
-	over 1 -2 get_free_neighbour_raw nip
+	over 1 -2 get_free_neighbour nip
 	if 1 + endif
 
-	over 2 -1 get_free_neighbour_raw nip
+	over 2 -1 get_free_neighbour nip
 	if 1 + endif
 
-	over 2 1 get_free_neighbour_raw nip
+	over 2 1 get_free_neighbour nip
 	if 1 + endif
 
-	over 1 2 get_free_neighbour_raw nip
+	over 1 2 get_free_neighbour nip
 	if 1 + endif
 
-	over -1 2 get_free_neighbour_raw nip
+	over -1 2 get_free_neighbour nip
 	if 1 + endif
 
-	over -2 1 get_free_neighbour_raw nip
+	over -2 1 get_free_neighbour nip
 	if 1 + endif
 
-	over -2 -1 get_free_neighbour_raw nip
+	over -2 -1 get_free_neighbour nip
 	if 1 + endif
 
 	nip ;
@@ -89,29 +78,69 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 	0 \ no_of_neighbours
 	8 0 do -1 neighbours i cells + ! loop
 
-	over 0 swap -1 -2 get_free_neighbour
-	if 1 + endif
+	over -1 -2 get_free_neighbour
+	if
+		neighbours 0 cells + !
+		1 +
+	else
+		drop
+	endif
 
-	over 1 swap 1 -2 get_free_neighbour
-	if 1 + endif
+	over 1 -2 get_free_neighbour
+	if
+		neighbours 1 cells + !
+		1 +
+	else
+		drop
+	endif
 
-	over 2 swap 2 -1 get_free_neighbour
-	if 1 + endif
+	over 2 -1 get_free_neighbour
+	if
+		neighbours 2 cells + !
+		1 +
+	else
+		drop
+	endif
 
-	over 3 swap 2 1 get_free_neighbour
-	if 1 + endif
+	over 2 1 get_free_neighbour
+	if
+		neighbours 3 cells + !
+		1 +
+	else
+		drop
+	endif
 
-	over 4 swap 1 2 get_free_neighbour
-	if 1 + endif
+	over 1 2 get_free_neighbour
+	if
+		neighbours 4 cells + !
+		1 +
+	else
+		drop
+	endif
 
-	over 5 swap -1 2 get_free_neighbour
-	if 1 + endif
+	over -1 2 get_free_neighbour
+	if
+		neighbours 5 cells + !
+		1 +
+	else
+		drop
+	endif
 
-	over 6 swap -2 1 get_free_neighbour
-	if 1 + endif
+	over -2 1 get_free_neighbour
+	if
+		neighbours 6 cells + !
+		1 +
+	else
+		drop
+	endif
 
-	over 7 swap -2 -1 get_free_neighbour
-	if 1 + endif
+	over -2 -1 get_free_neighbour
+	if
+		neighbours 7 cells + !
+		1 +
+	else
+		drop
+	endif
 
 	nip ;
 
