@@ -32,18 +32,15 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 : board_get_line ( pos -- t/f )
 	n / ;
 
-: 3pick ( n0 n1 n2 n3 -- n0 n1 n2 n3 n0 )
-	>r >r >r dup r> swap r> swap r> swap ;
-
 : get_free_neighbour ( pos dx dy - neighbour t/f )
-	-rot ( dy pos dx ) 0
-	2over ( dy pos dx 0 dy pos )
-	swap ( dy pos dx 0 pos dy ) 8
-	* + + + ( dy pos neighbour )
-	dup board_is_valid_pos invert if nip nip false exit endif
-	dup board_get_line 3pick 3pick board_get_line + = invert if nip nip false exit endif
-	dup board_is_empty_pos invert if nip nip false exit endif
-	nip nip true ;
+	rot ( dx dy pos )
+	2dup swap >r >r ( dx dy pos )
+	swap 8 ( dx pos dy 8 )
+	* + + ( neighbour )
+	dup board_is_valid_pos invert if r> r> 2drop false exit endif
+	dup board_get_line r> board_get_line r> + = invert if false exit endif
+	dup board_is_empty_pos invert if false exit endif
+	true ;
 
 : get_free_neighbours_raw ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
@@ -144,6 +141,9 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 
 	nip ;
 
+: 3pick ( n0 n1 n2 n3 -- n0 n1 n2 n3 n0 )
+	>r >r >r dup r> swap r> swap r> swap ;
+
 : choose_best_neighbour ( -- best_neighbour )
 	-1 ( best_neighbour = invalid position)
 	n m * ( best_neighbour_neighbours = unreachable high value )
@@ -153,7 +153,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 		neighbours swap cells + @ ( bn bnn neighbour )
 		dup -1 <> if
 			dup get_free_neighbours_raw ( bn bnn neighbour #n )
-			dup 3 pick ( bn bnn neighbour #n #n bnn )
+			dup 3pick ( bn bnn neighbour #n #n bnn )
 			< if ( bn bnn neighbour #n )
 				2nip ( neighbour #n)
 			else
