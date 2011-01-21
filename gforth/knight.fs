@@ -38,13 +38,16 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 	n /
 ;
 
+: 3pick ( n0 n1 n2 n3 -- n0 n1 n2 n3 n0 )
+	>r >r >r dup r> swap r> swap r> swap ;
+
 : get_free_neighbour_raw ( pos dx dy - neighbour t/f )
 	-rot ( dy pos dx ) 0
 	2over ( dy pos dx 0 dy pos )
 	swap ( dy pos dx 0 pos dy ) 8
 	* + + + ( dy pos neighbour )
 	dup board_is_valid_pos invert if nip nip false exit endif
-	dup board_get_line 3 pick 3 pick board_get_line + = invert if nip nip false exit endif
+	dup board_get_line 3pick 3pick board_get_line + = invert if nip nip false exit endif
 	dup board_is_empty_pos invert if nip nip false exit endif
 	nip nip true
 ;
