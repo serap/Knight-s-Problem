@@ -1,9 +1,30 @@
-8 constant n
-8 constant m
+\ Knight's problem solver
+\
+\ The following parameters are adjustable
+\ n ... length of board
+\ m ... width of board
+\ neighbour_precendence ... precedence which defines which neighbour
+\   will be choosen if, there is more than one posibility
+
+\ Here are the numbers of the possible neighbours:
+\ +-+-+-+-+-+
+\ | |1| |2| |
+\ +-+-+-+-+-+
+\ |8| | | |3|
+\ +-+-+-+-+-+
+\ | | |*| | |
+\ +-+-+-+-+-+
+\ |7| | | |4|
+\ +-+-+-+-+-+
+\ | |6| |5| |
+\ +-+-+-+-+-+
+
+6 constant n
+6 constant m
+create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 
 create board n m * cells allot
 create neighbours 8 cells allot
-create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 
 : init_board ( -- )
@@ -35,7 +56,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 : get_free_neighbour ( pos dx dy - neighbour t/f )
 	rot ( dx dy pos )
 	2dup swap >r >r ( dx dy pos )
-	swap 8 ( dx pos dy 8 )
+	swap n ( dx pos dy 8 )
 	* + + ( neighbour )
 	dup board_is_valid_pos invert if r> r> 2drop false exit endif
 	dup board_get_line r> board_get_line r> + = invert if false exit endif
