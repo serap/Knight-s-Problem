@@ -29,7 +29,7 @@ create neighbours number_of_neighbours cells allot
 create possible_neighbours_dx -1 , 1 , 2 , 2 , 1 , -1 , -2 , -2 ,
 create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 
-: init_board ( -- )
+: board_init ( -- )
 	n m * 0 do -1 board I cells + ! loop ;
 
 : board_move_from_to ( from_pos to_pos -- )
@@ -47,10 +47,10 @@ create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 	loop
 	true ;
 
-: board_is_valid_pos ( pos -- t/f )
-	dup 0 >=
-	swap n m * <
-	and ;
+: board_is_invalid_pos ( pos -- t/f )
+	dup 0 <
+	swap n m * >=
+	or ;
 
 : board_get_line ( pos -- t/f )
 	n / ;
@@ -66,8 +66,8 @@ create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 	2dup swap >r >r ( dx dy pos )
 	swap n ( dx pos dy n )
 	* + + ( neighbour )
-	dup board_is_valid_pos invert if r> r> 2drop false exit endif
-	dup board_get_line r> board_get_line r> + = invert if false exit endif
+	dup board_is_invalid_pos if r> r> 2drop false exit endif
+	dup board_get_line r> board_get_line r> + <> if false exit endif
 	dup board_is_empty_pos invert if false exit endif
 	true ;
 
@@ -118,7 +118,7 @@ create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 	drop ;
 
 : solve_from_pos ( pos -- success )
-	init_board
+	board_init
 
 	n m * 0 do
 		dup						( pos pos )
