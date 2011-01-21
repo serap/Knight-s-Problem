@@ -21,9 +21,9 @@
 
 8 constant n
 8 constant m
-8 constant number_of_neighbours
 create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 
+8 constant number_of_neighbours
 create board n m * cells allot
 create neighbours number_of_neighbours cells allot
 create possible_neighbours_dx -1 , 1 , 2 , 2 , 1 , -1 , -2 , -2 ,
@@ -61,7 +61,7 @@ create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 	swap
 	possible_neighbours_dy swap cells + @ ;
 
-: get_free_neighbour ( pos dx dy - neighbour t/f )
+: get_free_neighbour ( pos dx dy -- neighbour t/f )
 	rot ( dx dy pos )
 	2dup swap >r >r ( dx dy pos )
 	swap n ( dx pos dy n )
@@ -121,13 +121,13 @@ create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 	board_init
 
 	n m * 0 do
-		dup						( pos pos )
+		dup ( pos pos )
 		get_free_neighbours 0 = ( pos t/f )
-		if leave endif			( pos )
-		choose_best_neighbour	( pos best_neighbour )
-		2dup					( pos best_neighbour pos best_neighbour)
-		board_move_from_to		( pos best_neighbour )
-		nip 					( best_neighbour )
+		if leave endif ( pos )
+		choose_best_neighbour ( pos best_neighbour )
+		2dup ( pos best_neighbour pos best_neighbour)
+		board_move_from_to ( pos best_neighbour )
+		nip ( best_neighbour )
 	loop
 
 	dup
