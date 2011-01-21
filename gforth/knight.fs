@@ -25,7 +25,8 @@ create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 
 create board n m * cells allot
 create neighbours 8 cells allot
-create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
+create possible_neighbours_dx -1 , 1 , 2 , 2 , 1 , -1 , -2 , -2 ,
+create possible_neighbours_dy -2 , -2 , -1 , 1 , 2 , 2 , 1 , -1 ,
 
 : init_board ( -- )
 	n m * 0 do -1 board I cells + ! loop ;
@@ -53,6 +54,12 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 : board_get_line ( pos -- t/f )
 	n / ;
 
+: calc_neighbour_pos ( neighbour_id -- dx dy )
+	dup
+	possible_neighbours_dx swap cells + @
+	swap
+	possible_neighbours_dy swap cells + @ ;
+
 : get_free_neighbour ( pos dx dy - neighbour t/f )
 	rot ( dx dy pos )
 	2dup swap >r >r ( dx dy pos )
@@ -66,100 +73,25 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 : get_free_neighbours_raw ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
 
-	over -1 -2 get_free_neighbour nip
-	if 1 + endif
-
-	over 1 -2 get_free_neighbour nip
-	if 1 + endif
-
-	over 2 -1 get_free_neighbour nip
-	if 1 + endif
-
-	over 2 1 get_free_neighbour nip
-	if 1 + endif
-
-	over 1 2 get_free_neighbour nip
-	if 1 + endif
-
-	over -1 2 get_free_neighbour nip
-	if 1 + endif
-
-	over -2 1 get_free_neighbour nip
-	if 1 + endif
-
-	over -2 -1 get_free_neighbour nip
-	if 1 + endif
-
+	8 0 do
+		over i calc_neighbour_pos get_free_neighbour nip
+		if 1 + endif
+	loop
 	nip ;
 
 : get_free_neighbours ( pos -- no_of_neighbours )
 	0 \ no_of_neighbours
 	8 0 do -1 neighbours i cells + ! loop
 
-	over -1 -2 get_free_neighbour
-	if
-		neighbours 0 cells + !
-		1 +
-	else
-		drop
-	endif
-
-	over 1 -2 get_free_neighbour
-	if
-		neighbours 1 cells + !
-		1 +
-	else
-		drop
-	endif
-
-	over 2 -1 get_free_neighbour
-	if
-		neighbours 2 cells + !
-		1 +
-	else
-		drop
-	endif
-
-	over 2 1 get_free_neighbour
-	if
-		neighbours 3 cells + !
-		1 +
-	else
-		drop
-	endif
-
-	over 1 2 get_free_neighbour
-	if
-		neighbours 4 cells + !
-		1 +
-	else
-		drop
-	endif
-
-	over -1 2 get_free_neighbour
-	if
-		neighbours 5 cells + !
-		1 +
-	else
-		drop
-	endif
-
-	over -2 1 get_free_neighbour
-	if
-		neighbours 6 cells + !
-		1 +
-	else
-		drop
-	endif
-
-	over -2 -1 get_free_neighbour
-	if
-		neighbours 7 cells + !
-		1 +
-	else
-		drop
-	endif
-
+	8 0 do
+		over i calc_neighbour_pos get_free_neighbour
+		if
+			neighbours i cells + !
+			1 +
+		else
+			drop
+		endif
+	loop
 	nip ;
 
 : choose_best_neighbour ( -- best_neighbour )
