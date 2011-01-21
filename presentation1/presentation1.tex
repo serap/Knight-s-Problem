@@ -39,18 +39,6 @@ In German this problem is called "Springerproblem".
 
 \end{frame}
 
-\begin{frame}
-\frametitle{Variations of the knight's problem}
- Knight's problem is an instance of the Hamiltonian path problem (NP-complete)
- 
- Knight's Tour can be found in linear time!
-\begin{itemize}
-	\item Find a path for a given start and/or end position
-	\item Find a closed path for a given position 
-	\item Find a path for a board of size $n x m$ other than $8x8$
-\end{itemize}
-\end{frame}
-
 \subsection{Background}
 \begin{frame}
 \frametitle{The knight and his movement}
@@ -76,35 +64,18 @@ In German this problem is called "Springerproblem".
 \end{figure}
 \end{frame}
 
-\subsection{Solutions}
-\begin{frame}
-\frametitle{Backtracking}
-\begin{itemize}
-	\item Choose a random path of unvisited positions
-	\item If a dead end is reached $\rightarrow$ go back one step and
-	continue with another position than the last chosen 
-\end{itemize}
-Always finds a solution, if there is one 
- 
-Slow! Better solution?
-\end{frame}
-
 \begin{frame}
 \frametitle{Warnsdorff's algorithm}
-Found by H. C. Warnsdorff (1823)\par
+Heurisic by H. C. Warnsdorff (1823)\par
 \begin{itemize}
 	\item As long as there are reachable positions: visit unvisited position,
 	which has the fewest successor positions
 	\item Two positions with the same amount of successors $\rightarrow$
-	choose any of these positions
+	choose* any of these positions
 	\item Only a (very good) heuristic $\rightarrow$ must not find a solution
 	\item Even with board size $8x8$ there might be no solution
 \end{itemize}
-
-But: there are 13.267.364.410.532 undirected closed path solutions for a $8x8$ board
-
- $\rightarrow$ better heuristics 
-
+*...Choosing the right value is very important.
 \end{frame}
 
 \section{Implementation}
@@ -113,7 +84,7 @@ But: there are 13.267.364.410.532 undirected closed path solutions for a $8x8$ b
 \frametitle{Language}
 \begin{itemize}
 	\item Language: Forth (gforth)
-	\item Used special language feature: Data & return stack
+	\item Used special language feature: data and return stack, factoring
 \end{itemize}
 \end{frame}
 
@@ -122,9 +93,9 @@ But: there are 13.267.364.410.532 undirected closed path solutions for a $8x8$ b
 \frametitle{Algorithm}
 \begin{enumerate}
 	\item Start position on stack
-	\item Put possible neighbours on stack
+	\item Lookup all neighbours
 	\item Exit if no neighbours are reachable
-	\item Pick best neighbour and drop the others
+	\item Pick best neighbour and move on
 	\item Goto 2
 \end{enumerate}
 \end{frame}
