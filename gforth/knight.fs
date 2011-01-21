@@ -197,7 +197,8 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 
 : main
 	solve_all
-	\ 2 solve_one ;
+	\ 2 solve_one
+	;
 
 main
 bye
