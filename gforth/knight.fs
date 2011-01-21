@@ -19,8 +19,8 @@
 \ | |6| |5| |
 \ +-+-+-+-+-+
 
-6 constant n
-6 constant m
+8 constant n
+8 constant m
 create neighbour_precedence 5 , 4 , 2 , 6 , 8 , 3 , 1 , 7 ,
 
 create board n m * cells allot
@@ -56,7 +56,7 @@ create possible_neighbours -17 , -15 , -10 , -6 , 6 , 10 , 15 , 17
 : get_free_neighbour ( pos dx dy - neighbour t/f )
 	rot ( dx dy pos )
 	2dup swap >r >r ( dx dy pos )
-	swap n ( dx pos dy 8 )
+	swap n ( dx pos dy n )
 	* + + ( neighbour )
 	dup board_is_valid_pos invert if r> r> 2drop false exit endif
 	dup board_get_line r> board_get_line r> + = invert if false exit endif
